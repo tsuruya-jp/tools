@@ -51,10 +51,10 @@
 	```
 	required:	dummy
 	optional:	-h, --help	"show this help message and exit"	
-				-i, --id	"Required: Please input device code"
-				-f, --file	"Required: Please select input data file"
+			-i, --id	"Required: Please input device code"
+			-f, --file	"Required: Please select input data file"
 	```
-	- (例) python dummy_data_status.py dummy -i example -c example
+	- (例) python dummy_data_status.py dummy -i example
 
 ## 実行後
 1. 仮想環境から出る

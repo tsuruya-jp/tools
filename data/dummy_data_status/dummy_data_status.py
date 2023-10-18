@@ -10,10 +10,9 @@ from decimal import Decimal
 from os.path import join, dirname
 from dotenv import load_dotenv
 
-from sqlalchemy import create_engine, String, JSON
+from sqlalchemy import create_engine
 from sqlalchemy import select, func, update
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, Session
-from sqlalchemy.dialects.postgresql import JSONB
 
 
 class Base(DeclarativeBase):
@@ -93,14 +92,14 @@ def create(args):
 
     ENDPOINT = os.environ.get("ENDPOINT")
     PORT = os.environ.get("PORT")
-    USERNAME = os.environ.get("USERNAME") + args.customer
-    DBNAME = args.customer
+    DBNAME = os.environ.get("DBNAME")
+    USERNAME = os.environ.get("USERNAME")
     PASSWORD = os.environ.get("PASSWORD")
 
     CONNECT_STR = '{}://{}:{}@{}:{}/{}'.format(
         'postgresql', USERNAME, PASSWORD, ENDPOINT, PORT, DBNAME)
 
-    engine = create_engine(CONNECT_STR, echo=True)
+    engine = create_engine(CONNECT_STR, echo=False)
     with Session(engine) as session:
         device = session.scalar(select(Device)
                                 .where(Device.device_cd == args.id))
@@ -108,6 +107,11 @@ def create(args):
         formats = session.scalar(select(func.count())
                                  .select_from(Format)
                                  .where(Format.format_id == device.format_id))
+
+        status = session.scalar(select(func.count())
+                                .select_from(DataStatus)
+                                .where(DataStatus.device_cd == args.id)
+                                .where(DataStatus.tenant_id == device.tenant_id))
 
         dummy_data = []
 
@@ -132,7 +136,12 @@ def create(args):
             status_uuid = str(uuid.uuid4())
             seq = session.scalar(select(func.max(DataHistory.seq))
                                  .select_from(DataHistory)
-                                 .where(DataHistory.device_cd == args.id)) + 1
+                                 .where(DataHistory.device_cd == args.id))
+
+            if seq == None:
+                seq = 0
+
+            seq += 1
 
             session.add(DataHistory(
                 status_history_id=status_uuid,
@@ -144,11 +153,20 @@ def create(args):
             ))
 
             if i + 1 == len(dummy_data):
-                session.execute(update(DataStatus) \
-                    .where(DataStatus.device_cd == args.id) \
-                    .where(DataStatus.tenant_id == device.tenant_id) \
-                    .values(change_datetime = now, status = data)
-                )
+                if status == 0:
+                    session.add(DataStatus(
+                        status_id=status_uuid,
+                        tenant_id=device.tenant_id,
+                        device_cd=args.id,
+                        change_datetime=now,
+                        status=data
+                    ))
+                else:
+                    session.execute(update(DataStatus)
+                                    .where(DataStatus.device_cd == args.id)
+                                    .where(DataStatus.tenant_id == device.tenant_id)
+                                    .values(change_datetime=now, status=data)
+                                    )
 
         session.commit()
 
@@ -161,8 +179,6 @@ def main():
         'dummy', help='Script for dummy data input')
     parser_device.add_argument(
         '--id', '-i', required=True, help='Required: Please input device code')
-    parser_device.add_argument(
-        '--customer', '-c', required=True, help='Required: Please input customer name')
     parser_device.add_argument(
         '--file', '-f', default='dummy.csv', help='Optional: Please select input data file')
     parser_device.set_defaults(handler=create)

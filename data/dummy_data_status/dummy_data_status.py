@@ -5,11 +5,12 @@ import random
 import string
 import uuid
 import json
+import time
 from datetime import datetime, timezone
 from decimal import Decimal
 from os.path import join, dirname
 from dotenv import load_dotenv
-
+from tqdm import tqdm
 from sqlalchemy import create_engine
 from sqlalchemy import select, func, update
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, Session
@@ -130,7 +131,7 @@ def create(args):
 
                 dummy_data.append(data)
 
-        for i, data in enumerate(dummy_data):
+        for i, data in enumerate(tqdm(dummy_data)):
             data = json.dumps(data)
             now = str(datetime.now(timezone.utc))
             status_uuid = str(uuid.uuid4())
@@ -167,6 +168,8 @@ def create(args):
                                     .where(DataStatus.tenant_id == device.tenant_id)
                                     .values(change_datetime=now, status=data)
                                     )
+
+            time.sleep(0.01)
 
         session.commit()
 

@@ -26,18 +26,7 @@ class Device(Base):
     device_id: Mapped[str] = mapped_column(primary_key=True)
     tenant_id: Mapped[str]
     device_cd: Mapped[str]
-    device_name: Mapped[str]
-    device_description: Mapped[str]
-    location_latitude: Mapped[Decimal]
-    location_longitude: Mapped[Decimal]
     format_id: Mapped[str]
-    send_checking_time: Mapped[str]
-    comm_system: Mapped[str]
-    create_user_cd: Mapped[str]
-    create_datetime: Mapped[str]
-    update_user_cd: Mapped[str]
-    update_datetime: Mapped[str]
-    site: Mapped[str]
 
 
 class Format(Base):
@@ -46,23 +35,6 @@ class Format(Base):
     format_detail_id: Mapped[str] = mapped_column(primary_key=True)
     tenant_id: Mapped[str]
     format_id: Mapped[str]
-    value_number: Mapped[int]
-    value_name: Mapped[str]
-    y_max: Mapped[str]
-    y_min: Mapped[str]
-    kata: Mapped[str]
-    keta: Mapped[int]
-    sign: Mapped[str]
-    compute: Mapped[str]
-    json_key_name: Mapped[str]
-    observation_type: Mapped[str]
-    parameter1: Mapped[str]
-    parameter2: Mapped[str]
-    parameter3: Mapped[str]
-    create_user_cd: Mapped[str]
-    create_datetime: Mapped[str]
-    update_user_cd: Mapped[str]
-    update_datetime: Mapped[str]
 
 
 class DataStatus(Base):

@@ -1,6 +1,6 @@
 # ダミーデータ投入ツール
 
-## 事前準備
+## Require
 
 1. 環境変数の設定
 	- `.env.example` ファイルから `.env` ファイルを作成
@@ -43,7 +43,7 @@
 	pip install -r requirements.txt
 	```
 
-## 使用方法
+## Usage
 1. 投入したいダミーデータをcsvファイルに書く
 1. 対象のcsvファイルを `put_db_data/dummy_data_status` ディレクトリへ置く
 1. `python` コマンドでダミーツールを実行
@@ -57,7 +57,7 @@
 	```
 	- (例) python dummy_data_status.py dummy -i example
 
-## 実行後
+## Lastly
 1. 仮想環境から出る
 	```
 	deactivate

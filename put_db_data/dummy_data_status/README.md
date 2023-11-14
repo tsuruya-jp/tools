@@ -18,7 +18,7 @@
 1. 仮想環境を作成
 	- 仮想環境を作成するディレクトリに移動
 		```
-		cd tools/data/dummy_data_status
+		cd tools/put_db_data/dummy_data_status
 		```
 	- 仮想環境を作成
 		```
@@ -36,7 +36,7 @@
 	- コマンドラインに表示されるディレクトリの先頭に `(venv)` がついていたら成功
 		```
 		// 例
-		(venv) root:~/github.com/tsuruya-jp/tools/data/dummy_data_status
+		(venv) root:~/github.com/tsuruya-jp/tools/put_db_data/dummy_data_status
 		```
 1. ライブラリをインストール
 	```
@@ -45,14 +45,15 @@
 
 ## 使用方法
 1. 投入したいダミーデータをcsvファイルに書く
-1. 対象のcsvファイルを `data/dummy_data_status` ディレクトリへ置く
+1. 対象のcsvファイルを `put_db_data/dummy_data_status` ディレクトリへ置く
 1. `python` コマンドでダミーツールを実行
 	- 実行には引数が必要です
 	```
 	required:	dummy
 	optional:	-h, --help	"show this help message and exit"	
 			-i, --id	"Required: Please input device code"
-			-f, --file	"Required: Please select input data file"
+			-f, --file	"optional: Please select input data file"
+				default: dummy.csv
 	```
 	- (例) python dummy_data_status.py dummy -i example
 

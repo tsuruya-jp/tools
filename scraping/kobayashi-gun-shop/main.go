@@ -27,21 +27,32 @@ func main() {
 
 	records := make([][]string, 0)
 	titles := make([]string, 0)
+	kinds := make([]string, 0)
+	i := 0
 	c.OnHTML("div[id=guns_real]", func(e *colly.HTMLElement) {
 		e.ForEach("h2", func(_ int, h *colly.HTMLElement) {
+			i++
 			title := h.Text
 			title, _ = sjis_to_utf8(title)
 			titles = append(titles, title)
 		})
 
+		e.ForEach(".design1 > tbody > tr:nth-child(1) > td:nth-child(2)", func(_ int, h *colly.HTMLElement) {
+			kind := h.Text
+			kind, _ = sjis_to_utf8(kind)
+			kind = strings.TrimSpace(strings.TrimSuffix(kind, "\n"))
+			kinds = append(kinds, kind)
+		})
+
 		records = append(records, titles)
+		records = append(records, kinds)
 
 	})
 
 	c.Visit(URL)
 	c.Wait()
 
-	fmt.Printf("%#v", records)
+	fmt.Println(i)
 
 	file, err := os.Create("sample.csv")
 	if err != nil {

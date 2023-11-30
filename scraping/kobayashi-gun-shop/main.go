@@ -14,12 +14,12 @@ import (
 
 const URL = "http://www.kobayashi-guns.co.jp/guns/real/guns_real.html"
 
-func sjis_to_utf8(str string) (string, error) {
+func sjis_to_utf8(str string) string {
         ret, err := io.ReadAll(transform.NewReader(strings.NewReader(str), japanese.ShiftJIS.NewDecoder()))
         if err != nil {
-                return "", err
+			panic(err)	
         }
-        return string(ret), err
+        return string(ret)
 }
 
 func main() {
@@ -41,79 +41,47 @@ func main() {
 	c.OnHTML("div[id=guns_real]", func(e *colly.HTMLElement) {
 		e.ForEach("h2", func(_ int, h *colly.HTMLElement) {
 			i++
-			title := h.Text
-			title, _ = sjis_to_utf8(title)
-			titles = append(titles, title)
+			titles = append(titles, sjis_to_utf8(h.Text))
 		})
 
 		e.ForEach(".design1 > tbody > tr:nth-child(1) > td:nth-child(2)", func(_ int, h *colly.HTMLElement) {
-			kind := h.Text
-			kind, _ = sjis_to_utf8(kind)
-			kind = strings.TrimSpace(strings.TrimSuffix(kind, "\n"))
-			kinds = append(kinds, kind)
+			kinds = append(kinds, strings.TrimSpace(strings.TrimSuffix(sjis_to_utf8(h.Text), "\n")))
 		})
 
 		e.ForEach(".design1 > tbody > tr:nth-child(1) > td:nth-child(4)", func(_ int, h *colly.HTMLElement) {
-			caliber := h.Text
-			caliber, _ = sjis_to_utf8(caliber)
-			caliber = strings.TrimSpace(strings.TrimSuffix(caliber, "\n"))
-			calibers = append(calibers, caliber)
+			calibers = append(calibers, strings.TrimSpace(strings.TrimSuffix(sjis_to_utf8(h.Text), "\n")))
 		})
 
 		e.ForEach(".design1 > tbody > tr:nth-child(1) > td:nth-child(6)", func(_ int, h *colly.HTMLElement) {
-			maker := h.Text
-			maker, _ = sjis_to_utf8(maker)
-			maker = strings.TrimSpace(strings.TrimSuffix(maker, "\n"))
-			makers = append(makers, maker)
+			makers = append(makers, strings.TrimSpace(strings.TrimSuffix(sjis_to_utf8(h.Text), "\n")))
 		})
 
 		e.ForEach(".design1 > tbody > tr:nth-child(2) > td:nth-child(2)", func(_ int, h *colly.HTMLElement) {
-			model := h.Text
-			model, _ = sjis_to_utf8(model)
-			model = strings.TrimSpace(strings.TrimSuffix(model, "\n"))
-			models = append(models, model)
+			models = append(models, strings.TrimSpace(strings.TrimSuffix(sjis_to_utf8(h.Text), "\n")))
 		})
 
 		e.ForEach(".design1 > tbody > tr:nth-child(2) > td:nth-child(4)", func(_ int, h *colly.HTMLElement) {
-			gunHeight := h.Text
-			gunHeight, _ = sjis_to_utf8(gunHeight)
-			gunHeight = strings.TrimSpace(strings.TrimSuffix(gunHeight, "\n"))
-			gunHeights = append(gunHeights, gunHeight)
+			gunHeights = append(gunHeights, strings.TrimSpace(strings.TrimSuffix(sjis_to_utf8(h.Text), "\n")))
 		})
 
 		e.ForEach(".design1 > tbody > tr:nth-child(2) > td:nth-child(6)", func(_ int, h *colly.HTMLElement) {
-			gunWeight := h.Text
-			gunWeight, _ = sjis_to_utf8(gunWeight)
-			gunWeight = strings.TrimSpace(strings.TrimSuffix(gunWeight, "\n"))
-			gunWeights = append(gunWeights, gunWeight)
+			gunWeights = append(gunWeights, strings.TrimSpace(strings.TrimSuffix(sjis_to_utf8(h.Text), "\n")))
 		})
 
 		e.ForEach(".design1 > tbody > tr:nth-child(3) > td:nth-child(2)", func(_ int, h *colly.HTMLElement) {
-			pull := h.Text
-			pull, _ = sjis_to_utf8(pull)
-			pull = strings.TrimSpace(strings.TrimSuffix(pull, "\n"))
-			pulls = append(pulls, pull)
+			pulls = append(pulls, strings.TrimSpace(strings.TrimSuffix(sjis_to_utf8(h.Text), "\n")))
 		})
 
 		e.ForEach(".design1 > tbody > tr:nth-child(3) > td:nth-child(4)", func(_ int, h *colly.HTMLElement) {
-			condition := h.Text
-			condition, _ = sjis_to_utf8(condition)
-			condition = strings.TrimSpace(strings.TrimSuffix(condition, "\n"))
-			conditions = append(conditions, condition)
+			conditions = append(conditions, strings.TrimSpace(strings.TrimSuffix(sjis_to_utf8(h.Text), "\n")))
 		})
 
 		e.ForEach(".design1 > tbody > tr:nth-child(3) > td:nth-child(6)", func(_ int, h *colly.HTMLElement) {
-			remark := h.Text
-			remark, _ = sjis_to_utf8(remark)
-			remark = strings.TrimSpace(strings.ReplaceAll(strings.TrimSuffix(remark, "\n"), "\n", " "))
-			remarks = append(remarks, remark)
+			remarks = append(remarks, strings.TrimSpace(strings.ReplaceAll(strings.TrimSuffix(sjis_to_utf8(h.Text), "\n"), "\n", " ")))
 		})
 
 		e.ForEach(".design1 > tbody > tr > td:nth-child(1)", func(_ int, h *colly.HTMLElement) {
-			price := h.Text
-			price, _ = sjis_to_utf8(price)
-			price = strings.TrimSpace(strings.TrimSuffix(price, "\n"))
-			prices = append(prices, price)
+			prices = append(prices, strings.TrimSpace(strings.TrimSuffix(sjis_to_utf8(h.Text), "\n")))
 		})
 
 		records = append(records, titles)

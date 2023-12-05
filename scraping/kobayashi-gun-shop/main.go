@@ -22,6 +22,21 @@ func sjis_to_utf8(str string) string {
         return string(ret)
 }
 
+func transpose(slice [][]string) [][]string {
+    xl := len(slice[0])
+    yl := len(slice)
+    result := make([][]string, xl)
+    for i := range result {
+        result[i] = make([]string, yl)
+    }
+    for i := 0; i < xl; i++ {
+        for j := 0; j < yl; j++ {
+            result[i][j] = slice[j][i]
+        }
+    }
+    return result
+}
+
 func main() {
 	c := colly.NewCollector()
 
@@ -100,6 +115,8 @@ func main() {
 
 	c.Visit(URL)
 	c.Wait()
+
+	records = transpose(records)
 
 	fmt.Println(i)
 

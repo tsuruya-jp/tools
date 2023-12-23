@@ -15,11 +15,11 @@ import (
 const URL = "http://www.kobayashi-guns.co.jp/guns/real/guns_real.html"
 
 func sjis_to_utf8(str string) string {
-        ret, err := io.ReadAll(transform.NewReader(strings.NewReader(str), japanese.ShiftJIS.NewDecoder()))
-        if err != nil {
-			panic(err)	
-        }
-        return string(ret)
+	ret, err := io.ReadAll(transform.NewReader(strings.NewReader(str), japanese.ShiftJIS.NewDecoder()))
+	if err != nil {
+		panic(err)	
+	}
+	return string(ret)
 }
 
 func transpose(slice [][]string) [][]string {
